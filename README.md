@@ -13,19 +13,19 @@ n8n runs HTTP internally behind Traefik, while public/editor/webhook URLs are HT
   Required values:
   - `N8N_DOMAIN`: Public DNS name pointing to this server.
   - `TRAEFIK_ACME_EMAIL`: Email used for Let's Encrypt certificate registration.
+  - `POSTGRES_NON_ROOT_USER`: n8n application database user.
+  - `POSTGRES_NON_ROOT_PASSWORD`: n8n application database user password.
   - `TIMEZONE` and `N8N_VERSION` as needed.
 
 2. Create secrets:
 
       - ./postgres_user.txt
       - ./postgres_password.txt
-      - ./postgres_non_root_user.txt
-      - ./postgres_non_root_password.txt
       - ./cloudflare_dns_api_token.txt
 
     `cloudflare_dns_api_token.txt` must contain a Cloudflare API token with Zone DNS Edit permission.
   
-    You can generate the secrets using `init-secret.sh`
+    You can generate the secrets using `init-secret.sh`.
 3. In Cloudflare SSL/TLS settings, set mode to `Full (strict)`.
 
 4. Make sure ports `80` and `443` are open and not used by another service.

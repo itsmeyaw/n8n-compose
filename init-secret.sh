@@ -9,14 +9,10 @@ Usage: ./init-secret.sh [options]
 Creates the following files in the current working directory:
 	- postgres_user.txt
 	- postgres_password.txt
-	- postgres_non_root_user.txt
-	- postgres_non_root_password.txt
 
 Options:
 	-u, --postgres-user STRING               PostgreSQL root user
 	-p, --postgres-password STRING           PostgreSQL root password
-	-n, --postgres-non-root-user STRING      PostgreSQL non-root user
-	-r, --postgres-non-root-password STRING  PostgreSQL non-root password
 	-h, --help                               Show this help message
 
 If an option is not provided, a random value is generated.
@@ -44,8 +40,6 @@ write_secret() {
 
 postgres_user=""
 postgres_password=""
-postgres_non_root_user=""
-postgres_non_root_password=""
 
 while [[ $# -gt 0 ]]; do
 	case "$1" in
@@ -57,16 +51,6 @@ while [[ $# -gt 0 ]]; do
 		-p|--postgres-password)
 			[[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 1; }
 			postgres_password="${2:-}"
-			shift 2
-			;;
-		-n|--postgres-non-root-user)
-			[[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 1; }
-			postgres_non_root_user="${2:-}"
-			shift 2
-			;;
-		-r|--postgres-non-root-password)
-			[[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 1; }
-			postgres_non_root_password="${2:-}"
 			shift 2
 			;;
 		-h|--help)
@@ -83,12 +67,8 @@ done
 
 postgres_user="${postgres_user:-$(random_username)}"
 postgres_password="${postgres_password:-$(random_password)}"
-postgres_non_root_user="${postgres_non_root_user:-$(random_username)}"
-postgres_non_root_password="${postgres_non_root_password:-$(random_password)}"
 
 write_secret "postgres_user.txt" "$postgres_user"
 write_secret "postgres_password.txt" "$postgres_password"
-write_secret "postgres_non_root_user.txt" "$postgres_non_root_user"
-write_secret "postgres_non_root_password.txt" "$postgres_non_root_password"
 
 echo "Secret files created successfully."
