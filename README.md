@@ -1,36 +1,55 @@
 # Lean N8N Compose
 
-A HTTPS-ready n8n deployment for your own server using Traefik + Let's Encrypt.
+A HTTPS-ready n8n deployment using Traefik + Cloudflare Origin Server certificate.
 
-This setup uses Traefik ACME DNS challenge with Cloudflare, so SSL works even when Cloudflare proxy (orange cloud) is enabled.
+n8n runs HTTP internally behind Traefik, while public/editor/webhook URLs are exposed over HTTPS at your domain.
 
-n8n runs HTTP internally behind Traefik, while public/editor/webhook URLs are HTTPS on your domain.
-
-## Steps
+## Setup
 
 1. Copy `.env.example` to `.env` and configure values.
 
-  Required values:
-  - `N8N_DOMAIN`: Public DNS name pointing to this server.
-  - `TRAEFIK_ACME_EMAIL`: Email used for Let's Encrypt certificate registration.
-  - `POSTGRES_NON_ROOT_USER`: n8n application database user.
-  - `POSTGRES_NON_ROOT_PASSWORD`: n8n application database user password.
-  - `TIMEZONE` and `N8N_VERSION` as needed.
+Required values:
+- `N8N_DOMAIN`: Public DNS name pointing to this server.
+- `POSTGRES_NON_ROOT_USER`: n8n application database user.
+- `POSTGRES_NON_ROOT_PASSWORD`: n8n application database user password.
+- `TIMEZONE` and `N8N_VERSION` as needed.
 
-2. Create secrets:
+2. Create database secret files:
 
-      - ./postgres_user.txt
-      - ./postgres_password.txt
-      - ./cloudflare_dns_api_token.txt
+- `./postgres_user.txt`
+- `./postgres_password.txt`
 
-    `cloudflare_dns_api_token.txt` must contain a Cloudflare API token with Zone DNS Edit permission.
-  
-    You can generate the secrets using `init-secret.sh`.
-3. In Cloudflare SSL/TLS settings, set mode to `Full (strict)`.
+You can generate these with:
 
-4. Make sure ports `80` and `443` are open and not used by another service.
+```bash
+./init-secret.sh
+```
 
-5. Run docker compose
+3. Create a Cloudflare Origin Server certificate:
+
+1. Open Cloudflare Dashboard.
+2. Go to `SSL/TLS` -> `Origin Server`.
+3. Click `Create certificate`.
+4. Choose key format `PEM`.
+5. Include your hostname (for example `n8n.example.com`, and optionally `*.example.com`).
+6. Create and copy both values.
+
+Save them as files in the project root:
+
+- `./cf_certificate.pem` (certificate)
+- `./cf_private_key.pem` (private key)
+
+Recommended permissions:
+
+```bash
+chmod 600 cf_certificate.pem cf_private_key.pem
+```
+
+4. In Cloudflare `SSL/TLS` settings, set SSL mode to `Full (strict)`.
+
+5. Make sure port `443` is open and not used by another service.
+
+6. Start the stack:
 
 ```bash
 docker compose up -d

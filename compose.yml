@@ -6,7 +6,8 @@ services:
       - traefik.enable=true
       - traefik.docker.network=proxy
       - traefik.http.routers.n8n.rule=Host(`${N8N_DOMAIN}`)
-      - traefik.http.routers.n8n.entrypoints=web
+      - traefik.http.routers.n8n.entrypoints=websecure
+      - traefik.http.routers.n8n.tls=true
       - traefik.http.services.n8n.loadbalancer.server.port=5678
     environment:
       - N8N_PORT=5678
@@ -25,8 +26,8 @@ services:
       - N8N_PUBLIC_API_SWAGGERUI_DISABLED=true
       - N8N_TEMPLATES_ENABLED=true
       - N8N_HOST=${N8N_DOMAIN}
-      - N8N_EDITOR_BASE_URL=http://${N8N_DOMAIN}/
-      - WEBHOOK_URL=http://${N8N_DOMAIN}/
+      - N8N_EDITOR_BASE_URL=https://${N8N_DOMAIN}/
+      - WEBHOOK_URL=https://${N8N_DOMAIN}/
       - N8N_PROXY_HOPS=1
     volumes:
       - n8n_data:/home/node/.n8n
@@ -45,10 +46,19 @@ services:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure.http.tls=true
+      - --tls.stores.default.defaultcertificate.certfile=/etc/traefik/certs/cf_certificate.pem
+      - --tls.stores.default.defaultcertificate.keyfile=/etc/traefik/certs/cf_private_key.pem
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      - --entrypoints.web.http.redirections.entryPoint.permanent=true
     ports:
-      - "80:80"
+      - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./cf_certificate.pem:/etc/traefik/certs/cf_certificate.pem:ro
+      - ./cf_private_key.pem:/etc/traefik/certs/cf_private_key.pem:ro
     networks:
       - proxy
   db:
