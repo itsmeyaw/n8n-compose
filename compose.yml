@@ -44,6 +44,8 @@ services:
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
+    secrets:
+      - cloudflare_dns_api_token
     command:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
@@ -52,9 +54,13 @@ services:
       - --entryPoints.websecure.http.tls=true
       - --entrypoints.web.http.redirections.entryPoint.to=websecure
       - --entrypoints.web.http.redirections.entryPoint.scheme=https
-      - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge=true
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=30
       - --certificatesresolvers.letsencrypt.acme.email=${TRAEFIK_ACME_EMAIL}
       - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+    environment:
+      - CF_DNS_API_TOKEN_FILE=/run/secrets/cloudflare_dns_api_token
     ports:
       - "80:80"
       - "443:443"
@@ -100,3 +106,5 @@ secrets:
     file: ./postgres_non_root_user.txt
   postgres_non_root_password:
     file: ./postgres_non_root_password.txt
+  cloudflare_dns_api_token:
+    file: ./cloudflare_dns_api_token.txt
