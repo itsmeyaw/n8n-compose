@@ -1,5 +1,6 @@
 tls:
-  options:
+  stores:
     default:
-      certfile: /etc/traefik/certs/cf_certificate.pem
-      keyfile: /etc/traefik/certs/cf_private_key.pem
+      defaultCertificate:
+        certFile: /etc/traefik/certs/cf_certificate.pem
+        keyFile: /etc/traefik/certs/cf_private_key.pem
