@@ -87,6 +87,7 @@ volumes:
   postgres_data:
 networks:
   proxy:
+    name: proxy
 secrets:
   postgres_user:
     file: ./postgres_user.txt
