@@ -11,8 +11,12 @@ services:
       - traefik.http.routers.n8n.tls.certresolver=letsencrypt
       - traefik.http.services.n8n.loadbalancer.server.port=5678
     secrets:
-      - postgres_non_root_user
-      - postgres_non_root_password
+      - source: postgres_non_root_user
+        target: postgres_non_root_user
+        mode: 0444
+      - source: postgres_non_root_password
+        target: postgres_non_root_password
+        mode: 0444
     environment:
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
@@ -48,7 +52,9 @@ services:
     security_opt:
       - no-new-privileges:true
     secrets:
-      - cloudflare_dns_api_token
+      - source: cloudflare_dns_api_token
+        target: cloudflare_dns_api_token
+        mode: 0444
     command:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
@@ -76,10 +82,18 @@ services:
     image: postgres:alpine
     restart: always
     secrets:
-      - postgres_password
-      - postgres_user
-      - postgres_non_root_user
-      - postgres_non_root_password
+      - source: postgres_password
+        target: postgres_password
+        mode: 0400
+      - source: postgres_user
+        target: postgres_user
+        mode: 0400
+      - source: postgres_non_root_user
+        target: postgres_non_root_user
+        mode: 0444 # Needed because init script needs to read this file to create the non-root user
+      - source: postgres_non_root_password
+        target: postgres_non_root_password
+        mode: 0444
     environment:
       - POSTGRES_DB=n8n
       - POSTGRES_USER_FILE=/run/secrets/postgres_user
