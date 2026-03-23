@@ -4,6 +4,8 @@ A HTTPS-ready n8n deployment for your own server using Traefik + Let's Encrypt.
 
 This setup uses Traefik ACME DNS challenge with Cloudflare, so SSL works even when Cloudflare proxy (orange cloud) is enabled.
 
+n8n runs HTTP internally behind Traefik, while public/editor/webhook URLs are HTTPS on your domain.
+
 ## Steps
 
 1. Copy `.env.example` to `.env` and configure values.
