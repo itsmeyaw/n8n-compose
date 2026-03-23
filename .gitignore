@@ -1,0 +1,5 @@
+.env
+./postgres_user.txt
+./postgres_password.txt
+./postgres_non_root_user.txt
+./postgres_non_root_password.txt
