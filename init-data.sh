@@ -26,17 +26,13 @@ if [ -n "$admin_user" ] && [ -n "$app_user" ] && [ -n "$app_password" ]; then
 		-v app_password="$app_password" \
 		--username "$admin_user" \
 		--dbname "$db_name" <<-'EOSQL'
-		DO
-		$$
-		BEGIN
-			IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = :'app_user') THEN
-				EXECUTE format('CREATE USER %I WITH PASSWORD %L', :'app_user', :'app_password');
-			END IF;
+		SELECT format('CREATE USER %I WITH PASSWORD %L', :'app_user', :'app_password')
+		WHERE NOT EXISTS (
+			SELECT 1 FROM pg_catalog.pg_roles WHERE rolname = :'app_user'
+		)\gexec
 
-			EXECUTE format('GRANT ALL PRIVILEGES ON DATABASE %I TO %I', :'db_name', :'app_user');
-			EXECUTE format('GRANT CREATE ON SCHEMA public TO %I', :'app_user');
-		END
-		$$;
+		SELECT format('GRANT ALL PRIVILEGES ON DATABASE %I TO %I', :'db_name', :'app_user')\gexec
+		SELECT format('GRANT CREATE ON SCHEMA public TO %I', :'app_user')\gexec
 	EOSQL
 else
 	echo "SETUP INFO: Missing one of POSTGRES_USER(_FILE), POSTGRES_NON_ROOT_USER(_FILE), POSTGRES_NON_ROOT_PASSWORD(_FILE)."
