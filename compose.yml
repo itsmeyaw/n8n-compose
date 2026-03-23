@@ -45,6 +45,8 @@ services:
     command:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
+      - --providers.file.filename=/etc/traefik/dynamic.yml
+      - --providers.file.watch=true
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
       - --entrypoints.websecure.http.tls=true
@@ -55,7 +57,7 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./traefik.yml:/etc/traefik/dynamic.yml:ro
       - ./cf_certificate.pem:/etc/traefik/certs/cf_certificate.pem:ro
       - ./cf_private_key.pem:/etc/traefik/certs/cf_private_key.pem:ro
     networks:
