@@ -48,8 +48,6 @@ services:
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
       - --entrypoints.websecure.http.tls=true
-      - --tls.stores.default.defaultcertificate.certfile=/etc/traefik/certs/cf_certificate.pem
-      - --tls.stores.default.defaultcertificate.keyfile=/etc/traefik/certs/cf_private_key.pem
       - --entrypoints.web.http.redirections.entryPoint.to=websecure
       - --entrypoints.web.http.redirections.entryPoint.scheme=https
       - --entrypoints.web.http.redirections.entryPoint.permanent=true
@@ -57,6 +55,7 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
       - ./cf_certificate.pem:/etc/traefik/certs/cf_certificate.pem:ro
       - ./cf_private_key.pem:/etc/traefik/certs/cf_private_key.pem:ro
     networks:

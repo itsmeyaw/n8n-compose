@@ -1,0 +1,5 @@
+tls:
+  options:
+    default:
+      certfile: /etc/traefik/certs/cf_certificate.pem
+      keyfile: /etc/traefik/certs/cf_private_key.pem
