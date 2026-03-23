@@ -11,12 +11,8 @@ services:
       - traefik.http.routers.n8n.tls.certresolver=letsencrypt
       - traefik.http.services.n8n.loadbalancer.server.port=5678
     secrets:
-      - source: postgres_non_root_user
-        target: postgres_non_root_user
-        mode: 0444
-      - source: postgres_non_root_password
-        target: postgres_non_root_password
-        mode: 0444
+      - postgres_non_root_user
+      - postgres_non_root_password
     environment:
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
@@ -52,9 +48,7 @@ services:
     security_opt:
       - no-new-privileges:true
     secrets:
-      - source: cloudflare_dns_api_token
-        target: cloudflare_dns_api_token
-        mode: 0444
+      - cloudflare_dns_api_token
     command:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
@@ -82,27 +76,19 @@ services:
     image: postgres:alpine
     restart: always
     secrets:
-      - source: postgres_password
-        target: postgres_password
-        mode: 0400
-      - source: postgres_user
-        target: postgres_user
-        mode: 0400
-      - source: postgres_non_root_user
-        target: postgres_non_root_user
-        mode: 0444 # Needed because init script needs to read this file to create the non-root user
-      - source: postgres_non_root_password
-        target: postgres_non_root_password
-        mode: 0444
+      - postgres_password
+      - postgres_user
     environment:
       - POSTGRES_DB=n8n
       - POSTGRES_USER_FILE=/run/secrets/postgres_user
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
-      - POSTGRES_NON_ROOT_USER_FILE=/run/secrets/postgres_non_root_user
-      - POSTGRES_NON_ROOT_PASSWORD_FILE=/run/secrets/postgres_non_root_password
+      - POSTGRES_NON_ROOT_USER_FILE=/run/local-secrets/postgres_non_root_user.txt
+      - POSTGRES_NON_ROOT_PASSWORD_FILE=/run/local-secrets/postgres_non_root_password.txt
     volumes:
       - postgres_data:/var/lib/postgresql/18/docker
       - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+      - ./postgres_non_root_user.txt:/run/local-secrets/postgres_non_root_user.txt
+      - ./postgres_non_root_password.txt:/run/local-secrets/postgres_non_root_password.txt
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -h localhost -p 5432 -U $$(cat /run/secrets/postgres_user) -d n8n"]
       interval: 10s
