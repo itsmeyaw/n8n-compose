@@ -24,11 +24,13 @@ EOF
 }
 
 random_password() {
-	LC_ALL=C tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 32
+	# 16 random bytes rendered as hex => 32 chars.
+	od -An -N16 -tx1 /dev/urandom | tr -d ' \n'
 }
 
 random_username() {
-	printf 'user_%s' "$(LC_ALL=C tr -dc 'a-z0-9' < /dev/urandom | head -c 12)"
+	# 6 random bytes rendered as hex => 12 chars.
+	printf 'user_%s' "$(od -An -N6 -tx1 /dev/urandom | tr -d ' \n')"
 }
 
 write_secret() {
@@ -48,18 +50,22 @@ postgres_non_root_password=""
 while [[ $# -gt 0 ]]; do
 	case "$1" in
 		-u|--postgres-user)
+			[[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 1; }
 			postgres_user="${2:-}"
 			shift 2
 			;;
 		-p|--postgres-password)
+			[[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 1; }
 			postgres_password="${2:-}"
 			shift 2
 			;;
 		-n|--postgres-non-root-user)
+			[[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 1; }
 			postgres_non_root_user="${2:-}"
 			shift 2
 			;;
 		-r|--postgres-non-root-password)
+			[[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 1; }
 			postgres_non_root_password="${2:-}"
 			shift 2
 			;;
