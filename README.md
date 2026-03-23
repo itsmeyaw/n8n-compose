@@ -10,7 +10,7 @@ A HTTPS ready for n8n deployment for your own server.
       - ./postgres_password.txt
       - ./postgres_non_root_user.txt
       - ./postgres_non_root_password.txt
-    You can
+    You can generate the secrets using `init-secret.sh`
 3. Run docker compose
 ```bash
 docker compose up -d
