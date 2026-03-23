@@ -12,7 +12,8 @@ services:
       - N8N_PROTOCOL=https
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - N8N_RUNNERS_ENABLED=true
-      - GENERIC_TIMEZONE
+      - GENERIC_TIMEZONE="${TIMEZONE}"
+      - TZ="${TIMEZONE}"
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=db
       - DB_POSTGRESDB_PORT=5432
