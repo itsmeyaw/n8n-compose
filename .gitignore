@@ -4,5 +4,4 @@ postgres_password.txt
 postgres_non_root_user.txt
 postgres_non_root_password.txt
 cloudflare_dns_api_token.txt
-cf_certificate.pem
-cf_private_key.pem
+*.pem
