@@ -6,7 +6,9 @@ n8n runs HTTP internally behind Traefik, while public/editor/webhook URLs are ex
 
 ## Setup
 
-1. Copy `.env.example` to `.env` and configure values.
+1. Pull the repository 
+   
+2. Copy `.env.example` to `.env` and configure values.
 
 Required values:
 - `N8N_DOMAIN`: Public DNS name pointing to this server.
@@ -14,7 +16,7 @@ Required values:
 - `POSTGRES_NON_ROOT_PASSWORD`: n8n application database user password.
 - `TIMEZONE` and `N8N_VERSION` as needed.
 
-2. Create database secret files:
+3. Create database secret files:
 
 - `./postgres_user.txt`
 - `./postgres_password.txt`
@@ -25,7 +27,7 @@ You can generate these with:
 ./init-secret.sh
 ```
 
-3. Create a Cloudflare Origin Server certificate:
+4. Create a Cloudflare Origin Server certificate:
 
    1. Open Cloudflare Dashboard.
    2. Go to `SSL/TLS` -> `Origin Server`.
@@ -45,11 +47,11 @@ You can generate these with:
     chmod 600 cf_certificate.pem cf_private_key.pem
     ```
 
-4. In Cloudflare `SSL/TLS` settings, set SSL mode to `Full (strict)`. Note that this may disrupt any proxied service that was not configured with Cloudflare Origin Server.
+5. In Cloudflare `SSL/TLS` settings, set SSL mode to `Full (strict)`. Note that this may disrupt any proxied service that was not configured with Cloudflare Origin Server.
 
-5. Make sure port `443` is open and not used by another service.
+6. Make sure port `443` is open and not used by another service.
 
-6. Start the stack:
+7. Start the stack:
 
 ```bash
 docker compose up -d
