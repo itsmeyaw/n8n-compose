@@ -10,22 +10,22 @@ n8n runs HTTP internally behind Traefik, while public/editor/webhook URLs are ex
    
 2. Copy `.env.example` to `.env` and configure values.
 
-Required values:
-- `N8N_DOMAIN`: Public DNS name pointing to this server.
-- `POSTGRES_NON_ROOT_USER`: n8n application database user.
-- `POSTGRES_NON_ROOT_PASSWORD`: n8n application database user password.
-- `TIMEZONE` and `N8N_VERSION` as needed.
+    Required values:
+    - `N8N_DOMAIN`: Public DNS name pointing to this server.
+    - `POSTGRES_NON_ROOT_USER`: n8n application database user.
+    - `POSTGRES_NON_ROOT_PASSWORD`: n8n application database user password.
+    - `TIMEZONE` and `N8N_VERSION` as needed.
 
 3. Create database secret files:
 
-- `./postgres_user.txt`
-- `./postgres_password.txt`
+   - `./postgres_user.txt`
+   - `./postgres_password.txt`
 
-You can generate these with:
+   You can generate these with:
 
-```bash
-./init-secret.sh
-```
+   ```bash
+   ./init-secret.sh
+   ```
 
 4. Create a Cloudflare Origin Server certificate:
 
