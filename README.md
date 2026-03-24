@@ -53,6 +53,6 @@ n8n runs HTTP internally behind Traefik, while public/editor/webhook URLs are ex
 
 7. Start the stack:
 
-```bash
-docker compose up -d
-```
+    ```bash
+    docker compose up -d
+    ```
