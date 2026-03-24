@@ -27,25 +27,25 @@ You can generate these with:
 
 3. Create a Cloudflare Origin Server certificate:
 
-1. Open Cloudflare Dashboard.
-2. Go to `SSL/TLS` -> `Origin Server`.
-3. Click `Create certificate`.
-4. Choose key format `PEM`.
-5. Include your hostname (for example `n8n.example.com`, and optionally `*.example.com`).
-6. Create and copy both values.
+   1. Open Cloudflare Dashboard.
+   2. Go to `SSL/TLS` -> `Origin Server`.
+   3. Click `Create certificate`.
+   4. Choose key format `PEM`.
+   5. Include your hostname (for example `n8n.example.com`, and optionally `*.example.com`).
+   6. Create and copy both values.
 
-Save them as files in the project root:
+    Save them as files in the project root:
 
-- `./cf_certificate.pem` (certificate)
-- `./cf_private_key.pem` (private key)
+    - `./cf_certificate.pem` (certificate)
+    - `./cf_private_key.pem` (private key)
 
-Recommended permissions:
+    Recommended permissions:
 
-```bash
-chmod 600 cf_certificate.pem cf_private_key.pem
-```
+    ```bash
+    chmod 600 cf_certificate.pem cf_private_key.pem
+    ```
 
-4. In Cloudflare `SSL/TLS` settings, set SSL mode to `Full (strict)`.
+4. In Cloudflare `SSL/TLS` settings, set SSL mode to `Full (strict)`. Note that this may disrupt any proxied service that was not configured with Cloudflare Origin Server.
 
 5. Make sure port `443` is open and not used by another service.
 
